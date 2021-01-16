@@ -26,8 +26,17 @@ def draw_reactangle(image, faces):
         rect_end_position = (x+w, y+h)
         cv2.rectangle(image, rect_start_position, rect_end_position, color, thickness=2)
 
+def draw_mosaic(image, faces):
+    if not len(faces): return
+    for(x, y, w, h) in faces:
+        face_img = image[y:y+h, x:x+h]
+        face_img = cv2.resize(face_img, dsize=(0,0), fx=0.04, fy=0.04)
+        face_img = cv2.resize(face_img, (w, h), interpolation=cv2.INTER_AREA)
+        image[y:y+h, x:x+h] = face_img
+
 def show_face(image, faces):
     draw_reactangle(image, faces)
+    draw_mosaic(image, faces)
     plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB), cmap='gray')
     plt.xticks([]), plt.yticks([])
     plt.show()
@@ -41,4 +50,4 @@ def get_image(image):
 
 if __name__ == "__main__":
     face_cascade = get_classifier()
-    found_show_face(get_image("test5.jpg"))
+    found_show_face(get_image("test8.jpg"))
